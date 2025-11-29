@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Finanzas & Tareas</title>
+    <!-- Importamos Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importamos Iconos de Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Configuración básica de Tailwind -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#3b82f6",
+              success: "#10b981",
+              danger: "#ef4444",
+              bgLight: "#f3f4f6",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f3f4f6;
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        transition: all 0.2s;
+      }
+    </style>
+  </head>
+  <body class="pb-10">
+    <!-- Encabezado -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div
+        class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center"
+      >
+        <div>
+          <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <i data-lucide="wallet" class="text-primary"></i> Mi Control
+          </h1>
+          <p class="text-xs text-gray-500">Finanzas y Tareas Diarias</p>
+        </div>
+        <button
+          onclick="cargarDatos()"
+          class="p-2 rounded-full hover:bg-gray-100 text-primary transition"
+        >
+          <i data-lucide="refresh-cw" id="refresh-icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6 space-y-6">
+      <!-- Sección de Resumen Financiero -->
+      <section>
+        <h2 class="text-gray-700 font-semibold mb-3 flex items-center gap-2">
+          <i data-lucide="pie-chart" class="w-4 h-4"></i> Balance Actual
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Tarjeta de Saldo -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-primary card-hover"
+          >
+            <p class="text-sm text-gray-500">Disponible</p>
+            <p class="text-3xl font-bold text-gray-800" id="display-balance">
+              $0.00
+            </p>
+          </div>
+          <!-- Tarjeta de Ingresos -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-success card-hover"
+          >
+            <p class="text-sm text-gray-500">Ingresos Mes</p>
+            <p class="text-2xl font-bold text-success" id="display-income">
+              $0.00
+            </p>
+          </div>
+          <!-- Tarjeta de Gastos -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-danger card-hover"
+          >
+            <p class="text-sm text-gray-500">Gastos Mes</p>
+            <p class="text-2xl font-bold text-danger" id="display-expense">
+              $0.00
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna Izquierda: Últimos Movimientos -->
+        <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div
+            class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
+          >
+            <h3 class="font-semibold text-gray-700">Últimos Movimientos</h3>
+            <span
+              class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
+              >Recientes</span
+            >
+          </div>
+          <div
+            id="transactions-list"
+            class="divide-y divide-gray-100 max-h-80 overflow-y-auto"
+          >
+            <!-- Aquí se inyectan las transacciones vía JS -->
+            <div class="p-4 text-center text-gray-400">Cargando...</div>
+          </div>
+        </section>
+
+        <!-- Columna Derecha: Tareas del Día -->
+        <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div
+            class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
+          >
+            <h3 class="font-semibold text-gray-700">Tareas Pendientes</h3>
+            <span
+              class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full"
+              id="task-count"
+              >0</span
+            >
+          </div>
+          <div class="p-4">
+            <div id="tasks-list" class="space-y-3">
+              <!-- Aquí se inyectan las tareas vía JS -->
+            </div>
+            <!-- Formulario simple para añadir visualmente (no guarda en DB en esta demo) -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex gap-2">
+              <input
+                type="text"
+                placeholder="Nueva tarea rápida..."
+                class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+              />
+              <button
+                class="bg-primary text-white p-2 rounded-lg hover:bg-blue-600"
+              >
+                <i data-lucide="plus" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Modal de Error (Oculto por defecto) -->
+    <div
+      id="error-modal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-sm w-full">
+        <h3 class="text-red-600 font-bold text-lg mb-2">Error de Conexión</h3>
+        <p class="text-gray-600 text-sm mb-4" id="error-message">
+          No se pudieron cargar los datos.
+        </p>
+        <button
+          onclick="document.getElementById('error-modal').classList.add('hidden')"
+          class="w-full bg-gray-200 py-2 rounded-lg text-gray-800 font-medium hover:bg-gray-300"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Inicializar Iconos
+      lucide.createIcons();
+
+      // ==========================================
+      // CONFIGURACIÓN IMPORTANTE
+      // ==========================================
+      // Cuando configures tu n8n, pondrás aquí la URL de tu Webhook.
+      // Por ahora, déjalo vacío para usar el "Modo Demostración".
+      const N8N_WEBHOOK_URL = "";
+      // ==========================================
+
+      // Datos simulados (Mock Data) para cuando no hay conexión a n8n
+      const mockData = {
+        balance: 1250000,
+        income: 3500000,
+        expenses: 2250000,
+        transactions: [
+          {
+            id: 1,
+            type: "gasto",
+            concept: "Supermercado",
+            amount: 150000,
+            date: "Hoy, 10:30 AM",
+            category: "Comida",
+          },
+          {
+            id: 2,
+            type: "ingreso",
+            concept: "Pago Cliente A",
+            amount: 400000,
+            date: "Ayer, 04:15 PM",
+            category: "Trabajo",
+          },
+          {
+            id: 3,
+            type: "gasto",
+            concept: "Pago Internet",
+            amount: 80000,
+            date: "Ayer, 09:00 AM",
+            category: "Servicios",
+          },
+          {
+            id: 4,
+            type: "gasto",
+            concept: "Almuerzo",
+            amount: 25000,
+            date: "28 Nov",
+            category: "Comida",
+          },
+        ],
+        tasks: [
+          { id: 1, text: "Revisar presupuesto mensual", done: false },
+          { id: 2, text: "Pagar tarjeta de crédito", done: false },
+          { id: 3, text: "Enviar reporte semanal", done: true },
+        ],
+      };
+
+      // Función principal para cargar datos
+      async function cargarDatos() {
+        const refreshIcon = document.getElementById("refresh-icon");
+        refreshIcon.classList.add("animate-spin"); // Animación de carga
+
+        try {
+          let data;
+
+          if (N8N_WEBHOOK_URL && N8N_WEBHOOK_URL.startsWith("http")) {
+            // Si hay URL configurada, intentamos conectar a n8n
+            const response = await fetch(N8N_WEBHOOK_URL);
+            if (!response.ok) throw new Error("Error al conectar con n8n");
+            data = await response.json();
+          } else {
+            // Si no hay URL, usamos datos de prueba (Simulación)
+            console.log("Modo Demo: Usando datos simulados");
+            // Simulamos un retraso de red de 1 segundo
+            await new Promise((r) => setTimeout(r, 800));
+            data = mockData;
+          }
+
+          actualizarUI(data);
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("error-message").innerText =
+            "Verifica que tu flujo de n8n esté activo y la URL sea correcta.";
+          document.getElementById("error-modal").classList.remove("hidden");
+        } finally {
+          refreshIcon.classList.remove("animate-spin");
+        }
+      }
+
+      // Función para pintar los datos en pantalla
+      function actualizarUI(data) {
+        // Formateador de moneda
+        const formatoMoneda = new Intl.NumberFormat("es-CO", {
+          style: "currency",
+          currency: "COP",
+          maximumFractionDigits: 0,
+        });
+
+        // 1. Actualizar Tarjetas
+        document.getElementById("display-balance").innerText =
+          formatoMoneda.format(data.balance);
+        document.getElementById("display-income").innerText =
+          formatoMoneda.format(data.income);
+        document.getElementById("display-expense").innerText =
+          formatoMoneda.format(data.expenses);
+
+        // 2. Actualizar Lista de Transacciones
+        const txList = document.getElementById("transactions-list");
+        txList.innerHTML = "";
+
+        data.transactions.forEach((tx) => {
+          const isExpense = tx.type === "gasto";
+          const icon = isExpense ? "arrow-down-circle" : "arrow-up-circle";
+          const colorClass = isExpense ? "text-red-500" : "text-green-500";
+          const amountSign = isExpense ? "-" : "+";
+
+          const html = `
+                    <div class="p-4 hover:bg-gray-50 flex justify-between items-center transition">
+                        <div class="flex items-center gap-3">
+                            <div class="${
+                              isExpense ? "bg-red-100" : "bg-green-100"
+                            } p-2 rounded-full">
+                                <i data-lucide="${icon}" class="w-5 h-5 ${colorClass}"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">${
+                                  tx.concept
+                                }</p>
+                                <p class="text-xs text-gray-400">${tx.date} • ${
+            tx.category
+          }</p>
+                            </div>
+                        </div>
+                        <span class="font-bold ${colorClass}">${amountSign}${formatoMoneda.format(
+            tx.amount
+          )}</span>
+                    </div>
+                `;
+          txList.innerHTML += html;
+        });
+
+        // 3. Actualizar Lista de Tareas
+        const tasksList = document.getElementById("tasks-list");
+        const taskCount = document.getElementById("task-count");
+        tasksList.innerHTML = "";
+
+        // Contar pendientes
+        const pending = data.tasks.filter((t) => !t.done).length;
+        taskCount.innerText = pending;
+
+        data.tasks.forEach((task) => {
+          const html = `
+                    <div class="flex items-center gap-3 group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" ${
+                              task.done ? "checked" : ""
+                            } 
+                                class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-gray-300 shadow-sm checked:border-primary checked:bg-primary hover:border-primary focus:outline-none transition-all">
+                            <i data-lucide="check" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100"></i>
+                        </div>
+                        <span class="text-sm text-gray-700 ${
+                          task.done ? "line-through text-gray-400" : ""
+                        }">${task.text}</span>
+                    </div>
+                `;
+          tasksList.innerHTML += html;
+        });
+
+        // Re-inicializar iconos para los nuevos elementos insertados
+        lucide.createIcons();
+      }
+
+      // Cargar al iniciar
+      document.addEventListener("DOMContentLoaded", cargarDatos);
+    </script>
+  </body>
+</html>
