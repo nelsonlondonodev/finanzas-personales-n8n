@@ -2,13 +2,6 @@
       lucide.createIcons();
 
       // ==========================================
-      // CONFIGURACIÓN IMPORTANTE
-      // ==========================================
-      // Cuando configures tu n8n, pondrás aquí la URL de tu Webhook.
-      // Por ahora, déjalo vacío para usar el "Modo Demostración".
-      const N8N_WEBHOOK_URL =
-        "https://n8n.srv1033442.hstgr.cloud/webhook/dashboard-finanzas";
-      // ==========================================
 
       // Datos simulados (Mock Data) para cuando no hay conexión a n8n
       const mockData = {

@@ -1,0 +1,25 @@
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de registro (logs)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Directorios de dependencias y compilación
+node_modules/
+dist/
+build/
+
+# Directorios y archivos de editores de código
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Archivo de configuración local (contiene secretos)
+config.js
