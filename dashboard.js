@@ -90,11 +90,12 @@
 
       // Función para pintar los datos en pantalla
       function actualizarUI(data) {
-        // Formateador de moneda
-        const formatoMoneda = new Intl.NumberFormat("es-CO", {
+        // Formateador de moneda para Europa (España)
+        const formatoMoneda = new Intl.NumberFormat("es-ES", {
           style: "currency",
-          currency: "COP",
-          maximumFractionDigits: 0,
+          currency: "EUR",
+          minimumFractionDigits: 2, // Asegura que siempre muestre céntimos
+          maximumFractionDigits: 2,
         });
 
         // 1. Actualizar Tarjetas
