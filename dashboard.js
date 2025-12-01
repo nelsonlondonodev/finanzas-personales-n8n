@@ -58,16 +58,17 @@ function crearElementoTransaccion(tx) {
   const icon = isExpense ? "arrow-down-circle" : "arrow-up-circle";
   const colorClass = isExpense ? "text-red-500" : "text-green-500";
   const amountSign = isExpense ? "-" : "+";
+  const bgClass = isExpense ? "bg-red-100 dark:bg-red-500/10" : "bg-green-100 dark:bg-green-500/10";
 
   return `
-    <div class="p-4 hover:bg-gray-50 flex justify-between items-center transition">
+    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex justify-between items-center transition">
         <div class="flex items-center gap-3">
-            <div class="${isExpense ? "bg-red-100" : "bg-green-100"} p-2 rounded-full">
+            <div class="${bgClass} p-2 rounded-full">
                 <i data-lucide="${icon}" class="w-5 h-5 ${colorClass}"></i>
             </div>
             <div>
-                <p class="font-medium text-gray-800">${tx.concept}</p>
-                <p class="text-xs text-gray-400">${tx.date} • ${tx.category}</p>
+                <p class="font-medium text-gray-800 dark:text-gray-200">${tx.concept}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500">${tx.date} • ${tx.category}</p>
             </div>
         </div>
         <span class="font-bold ${colorClass}">${amountSign}${formatoMoneda.format(tx.amount)}</span>
@@ -84,7 +85,7 @@ function renderizarTransacciones(transacciones) {
   txList.innerHTML = ""; // Limpiar lista anterior
 
   if (transacciones.length === 0) {
-    txList.innerHTML = '<div class="p-4 text-center text-gray-400">No hay movimientos recientes.</div>';
+    txList.innerHTML = '<div class="p-4 text-center text-gray-400 dark:text-gray-500">No hay movimientos recientes.</div>';
     return;
   }
 
@@ -103,10 +104,10 @@ function crearElementoTarea(tarea) {
     <div class="flex items-center gap-3 group">
         <div class="relative flex items-center">
             <input type="checkbox" ${tarea.done ? "checked" : ""} 
-                class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-gray-300 shadow-sm checked:border-primary checked:bg-primary hover:border-primary focus:outline-none transition-all">
+                class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-gray-300 dark:border-gray-600 shadow-sm checked:border-primary checked:bg-primary hover:border-primary focus:outline-none transition-all">
             <i data-lucide="check" class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100"></i>
         </div>
-        <span class="text-sm text-gray-700 ${tarea.done ? "line-through text-gray-400" : ""}">${tarea.text}</span>
+        <span class="text-sm text-gray-700 dark:text-gray-300 ${tarea.done ? "line-through text-gray-400 dark:text-gray-500" : ""}">${tarea.text}</span>
     </div>
   `;
 }
@@ -124,7 +125,7 @@ function renderizarTareas(tareas) {
   taskCount.innerText = pending;
 
   if (tareas.length === 0) {
-    tasksList.innerHTML = '<div class="p-4 text-center text-gray-400">No hay tareas pendientes.</div>';
+    tasksList.innerHTML = '<div class="p-4 text-center text-gray-400 dark:text-gray-500">No hay tareas pendientes.</div>';
     return;
   }
 
@@ -149,6 +150,51 @@ function actualizarDashboard(data) {
 
   // Re-inicializar los iconos de Lucide para que se muestren los nuevos iconos
   lucide.createIcons();
+}
+
+/**
+ * @description Configura la lógica para el cambio de tema (modo claro/oscuro).
+ */
+function setupTheme() {
+  const htmlElement = document.documentElement;
+
+  /**
+   * @description Aplica el tema y actualiza la visibilidad de los iconos.
+   */
+  const applyTheme = (theme) => {
+    const isDark = theme === "dark";
+    // Busca las referencias a los iconos cada vez para asegurar que sean válidas
+    const sunIcon = document.getElementById("sun-icon");
+    const moonIcon = document.getElementById("moon-icon");
+
+    htmlElement.classList.toggle("dark", isDark);
+    
+    // Comprobación de seguridad por si los iconos no existen en el DOM
+    if (sunIcon && moonIcon) {
+      if (isDark) {
+        sunIcon.classList.remove("hidden");
+        moonIcon.classList.add("hidden");
+      } else {
+        sunIcon.classList.add("hidden");
+        moonIcon.classList.remove("hidden");
+      }
+    }
+  };
+
+  // Cargar tema al inicio
+  const savedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
+
+  // Listener de eventos delegado al documento para máxima robustez
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("#theme-toggle")) {
+      const isDark = htmlElement.classList.contains("dark");
+      const newTheme = isDark ? "light" : "dark";
+      applyTheme(newTheme);
+      localStorage.setItem("theme", newTheme);
+    }
+  });
 }
 
 /**
@@ -193,6 +239,7 @@ async function cargarDatos() {
  * @description Punto de entrada de la aplicación. Se ejecuta cuando el DOM está completamente cargado.
  */
 document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons(); // Inicializar iconos al cargar la página
-  cargarDatos();
+  lucide.createIcons(); // Inicializar iconos estáticos al cargar la página
+  setupTheme(); // Configurar la lógica del tema
+  cargarDatos(); // Cargar los datos del dashboard
 });

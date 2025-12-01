@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,6 +15,7 @@
         --color-success: #10b981;
         --color-danger: #ef4444;
         --color-light: #f3f4f6;
+        --color-dark: #111827;
       }
       @layer base {
         body {
@@ -28,10 +29,85 @@
         }
       }
     </style>
+    <!-- Estilos CSS Puros para Modo Oscuro -->
+    <style>
+      html.dark body {
+        background-color: var(--color-dark);
+        color: #d1d5db; /* text-gray-300 */
+      }
+      html.dark header {
+        background-color: rgba(31, 41, 55, 0.8); /* bg-gray-800/80 */
+        border-bottom: 1px solid #374151; /* border-gray-700 */
+      }
+      html.dark h1,
+      html.dark .text-gray-800 {
+        color: #f9fafb; /* text-gray-100 */
+      }
+      html.dark .text-gray-500 {
+        color: #9ca3af; /* text-gray-400 */
+      }
+      html.dark .text-gray-700 {
+        color: #d1d5db; /* text-gray-300 */
+      }
+      html.dark button:hover {
+        background-color: #374151; /* hover:bg-gray-700 */
+      }
+      html.dark .bg-white {
+        background-color: #1f2937; /* bg-gray-800 */
+      }
+      html.dark section,
+      html.dark .card-hover,
+      html.dark .rounded-xl {
+        box-shadow: none;
+      }
+      html.dark .p-4.border-b {
+        background-color: rgba(31, 41, 55, 0.5); /* bg-gray-800/50 */
+        border-color: #374151; /* border-gray-700 */
+      }
+      html.dark .divide-y > :not([hidden]) ~ :not([hidden]) {
+        border-color: #374151; /* divide-gray-700 */
+      }
+      html.dark .font-semibold.text-gray-700 {
+        color: #e5e7eb; /* text-gray-200 */
+      }
+      html.dark .text-center.text-gray-400 {
+        color: #6b7280; /* text-gray-500 */
+      }
+      html.dark .border-t {
+        border-color: #374151; /* border-gray-700 */
+      }
+      html.dark input[type="text"] {
+        background-color: #374151; /* bg-gray-700 */
+        border-color: #4b5563; /* border-gray-600 */
+        color: #e5e7eb; /* text-gray-200 */
+      }
+      html.dark input[type="text"]::placeholder {
+        color: #6b7280; /* placeholder:text-gray-500 */
+      }
+      /* Modal */
+      html.dark #error-modal .bg-white {
+        background-color: #1f2937; /* bg-gray-800 */
+      }
+      html.dark #error-modal .text-red-600 {
+        color: #f87171; /* text-red-400, a bit lighter for dark bg */
+      }
+       html.dark #error-modal .text-gray-600 {
+        color: #d1d5db; /* text-gray-300 */
+      }
+      html.dark #error-modal button {
+        background-color: #374151; /* bg-gray-700 */
+        color: #e5e7eb; /* text-gray-200 */
+      }
+       html.dark #error-modal button:hover {
+        background-color: #4b5563; /* hover:bg-gray-600 */
+      }
+    </style>
   </head>
-  <body class="pb-10 bg-light">
+  <body class="pb-10 bg-light transition-colors duration-300">
     <!-- Encabezado -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header
+      class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50"
+    >
       <div
         class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center"
       >
@@ -41,12 +117,23 @@
           </h1>
           <p class="text-xs text-gray-500">Finanzas y Tareas Diarias</p>
         </div>
-        <button
-          onclick="cargarDatos()"
-          class="p-2 rounded-full hover:bg-gray-100 text-primary transition"
-        >
-          <i data-lucide="refresh-cw" id="refresh-icon"></i>
-        </button>
+        <div class="flex items-center gap-2">
+          <!-- Botón para Cambiar Tema -->
+          <button
+            id="theme-toggle"
+            class="p-2 rounded-full hover:bg-gray-100 text-primary transition-colors"
+          >
+            <i data-lucide="sun" id="sun-icon" class="hidden"></i>
+            <i data-lucide="moon" id="moon-icon" class="block"></i>
+          </button>
+          <!-- Botón para Refrescar Datos -->
+          <button
+            onclick="cargarDatos()"
+            class="p-2 rounded-full hover:bg-gray-100 text-primary transition-colors"
+          >
+            <i data-lucide="refresh-cw" id="refresh-icon"></i>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -62,7 +149,10 @@
             class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-primary card-hover"
           >
             <p class="text-sm text-gray-500">Disponible</p>
-            <p class="text-3xl font-bold text-gray-800" id="display-balance">
+            <p
+              class="text-3xl font-bold text-gray-800"
+              id="display-balance"
+            >
               $0.00
             </p>
           </div>
@@ -89,7 +179,9 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Columna Izquierda: Últimos Movimientos -->
-        <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <section
+          class="bg-white rounded-xl shadow-sm overflow-hidden"
+        >
           <div
             class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
           >
@@ -104,12 +196,16 @@
             class="divide-y divide-gray-100 max-h-80 overflow-y-auto"
           >
             <!-- Aquí se inyectan las transacciones vía JS -->
-            <div class="p-4 text-center text-gray-400">Cargando...</div>
+            <div class="p-4 text-center text-gray-400">
+              Cargando...
+            </div>
           </div>
         </section>
 
         <!-- Columna Derecha: Tareas del Día -->
-        <section class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <section
+          class="bg-white rounded-xl shadow-sm overflow-hidden"
+        >
           <div
             class="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50"
           >
@@ -125,11 +221,13 @@
               <!-- Aquí se inyectan las tareas vía JS -->
             </div>
             <!-- Formulario simple para añadir visualmente (no guarda en DB en esta demo) -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex gap-2">
+            <div
+              class="mt-4 pt-4 border-t border-gray-100 flex gap-2"
+            >
               <input
                 type="text"
                 placeholder="Nueva tarea rápida..."
-                class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                class="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary"
               />
               <button
                 class="bg-primary text-white p-2 rounded-lg hover:bg-blue-600"
@@ -147,9 +245,14 @@
       id="error-modal"
       class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
     >
-      <div class="bg-white rounded-lg p-6 max-w-sm w-full">
-        <h3 class="text-red-600 font-bold text-lg mb-2">Error de Conexión</h3>
-        <p class="text-gray-600 text-sm mb-4" id="error-message">
+      <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
+        <h3 class="text-red-600 font-bold text-lg mb-2">
+          Error de Conexión
+        </h3>
+        <p
+          class="text-gray-600 text-sm mb-4"
+          id="error-message"
+        >
           No se pudieron cargar los datos.
         </p>
         <button
