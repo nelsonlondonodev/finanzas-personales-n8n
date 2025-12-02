@@ -209,7 +209,20 @@ async function cargarDatos() {
     let data;
     // Usar 'typeof' para evitar errores si 'config.js' no existe o la variable no está definida
     if (typeof N8N_WEBHOOK_URL !== 'undefined' && N8N_WEBHOOK_URL.startsWith("http")) {
-      const response = await fetch(N8N_WEBHOOK_URL);
+      // --- CAMBIO AQUÍ ---
+      // Configuramos las opciones de la petición para incluir la cabecera
+      const opciones = {
+        method: "GET", // Opcional, por defecto es GET
+        headers: {
+          "Content-Type": "application/json",
+          // Aquí inyectamos la llave que definimos en config.js
+          "x-api-key": typeof N8N_API_KEY !== 'undefined' ? N8N_API_KEY : "" 
+        }
+      };
+
+      // Pasamos las 'opciones' al fetch
+      const response = await fetch(N8N_WEBHOOK_URL, opciones);
+      // -------------------
       if (!response.ok) throw new Error(`Error en la respuesta de n8n: ${response.statusText}`);
       data = await response.json();
     } else {
