@@ -8,15 +8,24 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Importamos Iconos de Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Configuración de Tailwind y Estilos Personalizados -->
-    <style type="text/tailwindcss">
-      @theme {
-        --color-primary: #3b82f6;
-        --color-success: #10b981;
-        --color-danger: #ef4444;
-        --color-light: #f3f4f6;
-        --color-dark: #111827;
+    <!-- Configuración de Tailwind -->
+    <script type="tailwind-config">
+      {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#3b82f6',
+              success: '#10b981',
+              danger: '#ef4444',
+              light: '#f3f4f6',
+              dark: '#111827',
+            }
+          }
+        }
       }
+    </script>
+    <!-- Estilos Personalizados -->
+    <style type="text/tailwindcss">
       @layer base {
         body {
           font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
