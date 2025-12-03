@@ -4,18 +4,9 @@
 
 /**
  * @description Centraliza las referencias a los elementos del DOM para fácil acceso y mantenimiento.
+ * Se inicializa después de que el DOM esté completamente cargado.
  */
-const UI_ELEMENTS = {
-  balance: document.getElementById("display-balance"),
-  income: document.getElementById("display-income"),
-  expense: document.getElementById("display-expense"),
-  transactionsList: document.getElementById("transactions-list"),
-  tasksList: document.getElementById("tasks-list"),
-  taskCount: document.getElementById("task-count"),
-  refreshIcon: document.getElementById("refresh-icon"),
-  errorModal: document.getElementById("error-modal"),
-  errorMessage: document.getElementById("error-message"),
-};
+let UI_ELEMENTS;
 
 /**
  * @description Formateador de moneda para Europa (España).
@@ -194,6 +185,22 @@ async function cargarDatos() {
 // =================================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Primero, dejamos que Lucide reemplace las etiquetas <i> por <svg>.
   lucide.createIcons();
+
+  // Después, inicializamos el objeto UI_ELEMENTS para que capture los elementos correctos del DOM.
+  UI_ELEMENTS = {
+    balance: document.getElementById("display-balance"),
+    income: document.getElementById("display-income"),
+    expense: document.getElementById("display-expense"),
+    transactionsList: document.getElementById("transactions-list"),
+    tasksList: document.getElementById("tasks-list"),
+    taskCount: document.getElementById("task-count"),
+    refreshIcon: document.getElementById("refresh-icon"),
+    errorModal: document.getElementById("error-modal"),
+    errorMessage: document.getElementById("error-message"),
+  };
+
+  // Ahora sí, cargamos los datos.
   cargarDatos();
 });
