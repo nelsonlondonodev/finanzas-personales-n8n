@@ -38,79 +38,7 @@
         }
       }
     </style>
-    <!-- Estilos CSS Puros para Modo Oscuro -->
-    <style>
-      html.dark body {
-        background-color: var(--color-dark);
-        color: #d1d5db; /* text-gray-300 */
-      }
-      html.dark header {
-        background-color: rgba(31, 41, 55, 0.8); /* bg-gray-800/80 */
-        border-bottom: 1px solid #374151; /* border-gray-700 */
-      }
-      html.dark h1,
-      html.dark .text-gray-800 {
-        color: #f9fafb; /* text-gray-100 */
-      }
-      html.dark .text-gray-500 {
-        color: #9ca3af; /* text-gray-400 */
-      }
-      html.dark .text-gray-700 {
-        color: #d1d5db; /* text-gray-300 */
-      }
-      html.dark button:hover {
-        background-color: #374151; /* hover:bg-gray-700 */
-      }
-      html.dark .bg-white {
-        background-color: #1f2937; /* bg-gray-800 */
-      }
-      html.dark section,
-      html.dark .card-hover,
-      html.dark .rounded-xl {
-        box-shadow: none;
-      }
-      html.dark .p-4.border-b {
-        background-color: rgba(31, 41, 55, 0.5); /* bg-gray-800/50 */
-        border-color: #374151; /* border-gray-700 */
-      }
-      html.dark .divide-y > :not([hidden]) ~ :not([hidden]) {
-        border-color: #374151; /* divide-gray-700 */
-      }
-      html.dark .font-semibold.text-gray-700 {
-        color: #e5e7eb; /* text-gray-200 */
-      }
-      html.dark .text-center.text-gray-400 {
-        color: #6b7280; /* text-gray-500 */
-      }
-      html.dark .border-t {
-        border-color: #374151; /* border-gray-700 */
-      }
-      html.dark input[type="text"] {
-        background-color: #374151; /* bg-gray-700 */
-        border-color: #4b5563; /* border-gray-600 */
-        color: #e5e7eb; /* text-gray-200 */
-      }
-      html.dark input[type="text"]::placeholder {
-        color: #6b7280; /* placeholder:text-gray-500 */
-      }
-      /* Modal */
-      html.dark #error-modal .bg-white {
-        background-color: #1f2937; /* bg-gray-800 */
-      }
-      html.dark #error-modal .text-red-600 {
-        color: #f87171; /* text-red-400, a bit lighter for dark bg */
-      }
-       html.dark #error-modal .text-gray-600 {
-        color: #d1d5db; /* text-gray-300 */
-      }
-      html.dark #error-modal button {
-        background-color: #374151; /* bg-gray-700 */
-        color: #e5e7eb; /* text-gray-200 */
-      }
-       html.dark #error-modal button:hover {
-        background-color: #4b5563; /* hover:bg-gray-600 */
-      }
-    </style>
+
   </head>
   <body class="pb-10 bg-light transition-colors duration-300">
     <!-- Encabezado -->
@@ -127,14 +55,7 @@
           <p class="text-xs text-gray-500">Finanzas y Tareas Diarias</p>
         </div>
         <div class="flex items-center gap-2">
-          <!-- Botón para Cambiar Tema -->
-          <button
-            id="theme-toggle"
-            class="p-2 rounded-full hover:bg-gray-100 text-primary transition-colors"
-          >
-            <i data-lucide="sun" id="sun-icon" class="hidden"></i>
-            <i data-lucide="moon" id="moon-icon" class="block"></i>
-          </button>
+
           <!-- Botón para Refrescar Datos -->
           <button
             onclick="cargarDatos()"

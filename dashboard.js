@@ -152,50 +152,7 @@ function actualizarDashboard(data) {
   lucide.createIcons();
 }
 
-/**
- * @description Configura la lógica para el cambio de tema (modo claro/oscuro).
- */
-function setupTheme() {
-  const htmlElement = document.documentElement;
 
-  /**
-   * @description Aplica el tema y actualiza la visibilidad de los iconos.
-   */
-  const applyTheme = (theme) => {
-    const isDark = theme === "dark";
-    // Busca las referencias a los iconos cada vez para asegurar que sean válidas
-    const sunIcon = document.getElementById("sun-icon");
-    const moonIcon = document.getElementById("moon-icon");
-
-    htmlElement.classList.toggle("dark", isDark);
-    
-    // Comprobación de seguridad por si los iconos no existen en el DOM
-    if (sunIcon && moonIcon) {
-      if (isDark) {
-        sunIcon.classList.remove("hidden");
-        moonIcon.classList.add("hidden");
-      } else {
-        sunIcon.classList.add("hidden");
-        moonIcon.classList.remove("hidden");
-      }
-    }
-  };
-
-  // Cargar tema al inicio
-  const savedTheme = localStorage.getItem("theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
-
-  // Listener de eventos delegado al documento para máxima robustez
-  document.addEventListener("click", (event) => {
-    if (event.target.closest("#theme-toggle")) {
-      const isDark = htmlElement.classList.contains("dark");
-      const newTheme = isDark ? "light" : "dark";
-      applyTheme(newTheme);
-      localStorage.setItem("theme", newTheme);
-    }
-  });
-}
 
 /**
  * @description Carga los datos desde el webhook de n8n o usa los datos simulados.
@@ -253,6 +210,5 @@ async function cargarDatos() {
  */
 document.addEventListener("DOMContentLoaded", () => {
   lucide.createIcons(); // Inicializar iconos estáticos al cargar la página
-  setupTheme(); // Configurar la lógica del tema
   cargarDatos(); // Cargar los datos del dashboard
 });
